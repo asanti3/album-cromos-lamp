@@ -1,4 +1,4 @@
--- db/init_data.sql
+-- sql/init_data.sql
 -- Dades inicials (PROFE + Grups)
 -- IMPORTANT:
 -- 1) Genera password_hash amb php -r 'echo password_hash("TU_PASSWORD", PASSWORD_DEFAULT), PHP_EOL;'

@@ -8,34 +8,42 @@ require_login();
    CONFIG ÀLBUM
    ========================= */
 const SLOTS_PER_PAGE = 4;
-const TOTAL_SLOTS    = 20; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
+const TOTAL_SLOTS    = 28; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
 
 /**
  * Placeholder del nom del cromo / tasca.
- * Omple aquest mapping amb les tasques reals quan ho tinguis.
+ * Omple aquest mapping amb les tasques.
  */
 function slot_title(int $slot): string {
     $map = [
-        1  => 'Tasca 1 — Placeholder',
-        2  => 'Tasca 2 — Placeholder',
-        3  => 'Tasca 3 — Placeholder',
-        4  => 'Tasca 4 — Placeholder',
-        5  => 'Tasca 5 — Placeholder',
-        6  => 'Tasca 6 — Placeholder',
-        7  => 'Tasca 7 — Placeholder',
-        8  => 'Tasca 8 — Placeholder',
-        9  => 'Tasca 9 — Placeholder',
-        10 => 'Tasca 10 — Placeholder',
-        11 => 'Tasca 11 — Placeholder',
-        12 => 'Tasca 12 — Placeholder',
-        13 => 'Tasca 13 — Placeholder',
-        14 => 'Tasca 14 — Placeholder',
-        15 => 'Tasca 15 — Placeholder',
-        16 => 'Tasca 16 — Placeholder',
-        17 => 'Tasca 17 — Placeholder',
-        18 => 'Tasca 18 — Placeholder',
-        19 => 'Tasca 19 — Placeholder',
-        20 => 'Tasca 20 — Placeholder',
+        1  => '#1 Taula de subxarxes',
+        2  => '#2 Mapa de xarxa (versió 1)',
+        3  => '#3 show ip interface brief R1',
+        4  => '#4 show ip interface brief R2',
+        5  => '#5 show ip interface brief R3',
+        6  => '#6 show ip interface brief R4',
+        7  => '#7 (Extra) — Configuració d\'un d\'DHCP',
+        8  => '#8 — Configuració del gateway',
+        9  => '#9 — /etc/network/interfaces, show ip o similar d\'un PC d\'IT',
+        10 => '#10 — /etc/network/interfaces, show ip o similar d\'un PC de RRHH',
+        11 => '#11 — /etc/network/interfaces, show ip o similar d\'un PC de finances',
+        12 => '#12 — /etc/network/interfaces, show ip o similar d\'un PC de comercial',
+        13 => '#13 — /etc/network/interfaces d\'un servidor d\'IT',
+        14 => '#14 — /etc/network/interfaces d\'un servidor de RRHH',
+        15 => '#15 — /etc/network/interfaces d\'un servidor de finances',
+        16 => '#16 — /etc/network/interfaces d\'un servidor de comercial',
+        17 => '#17 — /etc/network/interfaces d\'alguna impressora',
+        18 => '#18 — PingPC -> Servidor (IT)',
+        19 => '#19 — PingPC -> Servidor (RRHH)',
+        20 => '#20 — PingPC -> Servidor (Finances)',
+        21 => '#21 — PingPC -> Servidor (Comercial)',
+        22 => '#22 — Impressora responent (IPImpressora:643 des del navegador)',
+        23 => '#23 — Ping google (1 PC d\'IT)',
+        24 => '#24 — Ping google (1 PC de RRHH)',
+        25 => '#25 — Ping google (1 PC de finances)',
+        26 => '#26 — Ping google (1 PC de comercial)',
+        27 => '#27 — Properament...',
+        28 => '#28 — Properament...',
     ];
     return $map[$slot] ?? "Tasca {$slot} — Placeholder";
 }

@@ -8,8 +8,8 @@ require_login();
    CONFIG ÀLBUM
    ========================= */
 const SLOTS_PER_PAGE = 4;
-const TOTAL_SLOTS    = 28; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
-const REAL_SLOTS     = 26; // <-- per no comptar els slots "dummy" 
+const TOTAL_SLOTS    = 48; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
+const REAL_SLOTS     = 47; // <-- per no comptar els slots "dummy" 
 
 /**
  * Placeholder del nom del cromo / tasca.
@@ -43,8 +43,29 @@ function slot_title(int $slot): string {
         24 => '#24 — Ping google (1 PC de RRHH)',
         25 => '#25 — Ping google (1 PC de finances)',
         26 => '#26 — Ping google (1 PC de comercial)',
-        27 => '#27 — Properament...',
-        28 => '#28 — Properament...',
+        27 => '#27 — IPs configuració ETH1/ETH2 R1',
+        28 => '#28 — IPs configuració ETH1/ETH2 R2',
+        29 => '#29 — IPs configuració ETH1/ETH2 R3',
+        30 => '#30 — IPs configuració ETH1/ETH2 R4',
+        31 => '#31 — Configuració IP PC real (IT) (IP, màscara, DNS, Gateway)',
+        32 => '#32 — Configuració IP PC real (RRHH) (IP, màscara, DNS, Gateway)',
+        33 => '#33 — Configuració IP PC real (finances) (IP, màscara, DNS, Gateway)',
+        34 => '#34 — Configuració IP PC real (comercial) (IP, màscara, DNS, Gateway)',
+        35 => '#35 — Ping PC real -> Servidor (IT)',
+        36 => '#36 — Ping PC real -> Servidor (RRHH)',
+        37 => '#37 — Ping PC real -> Servidor (finances)',
+        38 => '#38 — Ping PC real -> Servidor (comercial)',
+        39 => '#39 — Impressora RRHH accessible (http://IP_impressora:631)',
+        40 => '#40 — Impressora finances accessible (http://IP_impressora:631)',
+        41 => '#41 — Impressora comercial accessible (http://IP_impressora:631)',
+        42 => '#42 — Ping a internet des d\'un PC real (IT)',
+        43 => '#43 — Ping a internet des d\'un PC real (RRHH)',
+        44 => '#44 — Ping a internet des d\'un PC real (finances)',
+        45 => '#45 — Ping a internet des d\'un PC real (comercial)',
+        46 => '#46 — Mapa de xarxa complet (ha de ser una única captura del mapa complet en GNS3, reflectint si s\'escau els canvis fets des de la 1a entrega',
+        47 => '#47 — Taula d\'incidències detectades i resoltes',
+
+
     ];
     return $map[$slot] ?? "Tasca {$slot} — Placeholder";
 }

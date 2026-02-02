@@ -67,7 +67,7 @@ function slot_title(int $slot): string {
 
 
     ];
-    return $map[$slot] ?? "Tasca {$slot} — Placeholder";
+    return $map[$slot] ?? "Tasca {$slot} — Properament";
 }
 
 /* =========================

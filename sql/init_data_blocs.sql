@@ -11,9 +11,9 @@ VALUES
 
 INSERT INTO bloc_calendari (class_id, bloc_id, data_obertura, data_tancament)
 VALUES
-  (1, 1, '2026-01-15 00:00:00', '2026-01-29 23:59:59'), -- 1B
-  (2, 1, '2026-01-16 00:00:00', '2026-01-30 23:59:59'), -- 1A
-  (3, 1, '2026-01-16 00:00:00', '2026-01-30 23:59:59'); -- Comp
+  (1, 1, '2026-01-15 00:00:00', '2026-02-12 23:59:59'), -- 1B
+  (2, 1, '2026-01-16 00:00:00', '2026-02-13 23:59:59'), -- 1A
+  (3, 1, '2026-01-16 00:00:00', '2026-02-13 23:59:59'); -- Comp
 
 INSERT INTO bloc_calendari (class_id, bloc_id, data_obertura, data_tancament)
 VALUES

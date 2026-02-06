@@ -8,7 +8,7 @@ require_login();
    CONFIG ÀLBUM
    ========================= */
 const SLOTS_PER_PAGE = 4;
-const TOTAL_SLOTS    = 28; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
+const TOTAL_SLOTS    = 48; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
 const REAL_SLOTS     = 47; // <-- per no comptar els slots "dummy" 
 
 /**
@@ -65,7 +65,7 @@ function slot_title(int $slot): string {
         46 => '#46 — Mapa de xarxa complet (ha de ser una única captura del mapa complet en GNS3, reflectint si s\'escau els canvis fets des de la 1a entrega',
         47 => '#47 — Taula d\'incidències detectades i resoltes',
     ];
-    return $map[$slot] ?? "Tasca {$slot} — Placeholder";
+    return $map[$slot] ?? "Tasca {$slot} — Properament";
 }
 
 /* =========================

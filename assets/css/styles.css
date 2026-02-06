@@ -16,10 +16,12 @@ body{
   margin:0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   color: var(--ink);
-  background:
-    radial-gradient(1200px 600px at 15% 15%, rgba(22,199,195,.18), transparent 60%),
-    radial-gradient(900px 500px at 85% 25%, rgba(12,142,145,.14), transparent 55%),
-    var(--bg);
+  background: rgba(199,22,15,.88);
+    /*radial-gradient(1200px 600px at 15% 15%, rgba(22,199,195,.18), transparent 60%),
+    radial-gradient(900px 500px at 85% 25%, rgba(12,142,145,.14), transparent 55%),*/
+    /*radial-gradient(1200px 600px at 15% 15%, rgba(199,22,195,.18), transparent 90%),
+    radial-gradient(900px 500px at 85% 25%, rgba(142,12,145,.14), transparent 90%),
+    var(--bg);*/
 }
 
 a{ color: var(--primary-dark); }
@@ -203,11 +205,53 @@ label{
 
 .album-header{
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:space-between;
-  gap: 14px;
+  gap: 10px;
   margin-bottom: 14px;
 }
+
+.album-header-top{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.album-header-bottom{
+  display: block;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.album-header-bottom-row{
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.album-header-bottom-left{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.album-header-bottom-right{
+  flex: 0 0 30%;
+  max-width: 30%;
+  margin-left: auto;
+  margin-bottom: 10px;
+  align-self: flex-end;
+}
+
+.album-header-bottom-right .progress-bar{
+  height: 7px; /* una mica més discreta */
+}
+
 
 .album-brand{
   display:flex;
@@ -594,4 +638,41 @@ label{
 .mini-none{  height:100%; background:#ddd; /* gris neutre */
 }
 
+/* Format blocs (subalbums) */
+.bloc-selector-wrapper{
+  margin-top: 8px;
+  max-width: 100%;
+}
+
+.bloc-selector-label{
+  display: block;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.bloc-warning{
+  display: block;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--muted);
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.bloc-selector{
+  margin-top: 6px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge-muted{
+  opacity: .6;
+}
+
+.badge-active{
+  border: 1px solid var(--primary);
+}
 

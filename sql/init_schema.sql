@@ -31,6 +31,7 @@ CREATE TABLE groups (
   password_hash VARCHAR(255) NOT NULL,
   role          ENUM('profe', 'group') NOT NULL,
   active        TINYINT(1) NOT NULL DEFAULT 1,
+  class_id      INT NOT NULL
   created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_groups_username (username)
 ) ENGINE=InnoDB;
@@ -55,6 +56,36 @@ CREATE TABLE uploads (
 
   UNIQUE KEY uq_group_slot (group_id, slot),
   KEY idx_uploads_group_created (group_id, created_at)
+) ENGINE=InnoDB;
+
+-- 3.3) Blocs
+CREATE TABLE blocs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(100) NOT NULL,
+  slot_inici INT NOT NULL,
+  slot_final INT NOT NULL,
+  visible TINYINT(1) NOT NULL DEFAULT 1,
+  editable TINYINT(1) NOT NULL DEFAULT 1,
+  ordre INT NOT NULL
+) ENGINE=InnoDB;
+
+-- 3.4) Calendari dels blocs
+CREATE TABLE bloc_calendari (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  class_id INT NOT NULL,
+  bloc_id INT NOT NULL,
+  data_obertura DATETIME NOT NULL,
+  data_tancament DATETIME NOT NULL,
+
+  CONSTRAINT fk_bc_bloc
+    FOREIGN KEY (bloc_id) REFERENCES blocs(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 3.5) Grups classe
+CREATE TABLE grupsclasse (
+  class_id INT PRIMARY KEY,
+  identificador VARCHAR(50) NOT NULL
 ) ENGINE=InnoDB;
 
 

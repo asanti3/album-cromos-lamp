@@ -9,7 +9,7 @@ require_login();
    ========================= */
 const SLOTS_PER_PAGE = 4;
 const TOTAL_SLOTS    = 28; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
-const REAL_SLOTS     = 26; // <-- per no comptar els slots "dummy" 
+const REAL_SLOTS     = 47; // <-- per no comptar els slots "dummy" 
 
 /**
  * Placeholder del nom del cromo / tasca.
@@ -43,8 +43,27 @@ function slot_title(int $slot): string {
         24 => '#24 — Ping google (1 PC de RRHH)',
         25 => '#25 — Ping google (1 PC de finances)',
         26 => '#26 — Ping google (1 PC de comercial)',
-        27 => '#27 — Properament...',
-        28 => '#28 — Properament...',
+        27 => '#27 — IPs configuració ETH1/ETH2 R1',
+        28 => '#28 — IPs configuració ETH1/ETH2 R2',
+        29 => '#29 — IPs configuració ETH1/ETH2 R3',
+        30 => '#30 — IPs configuració ETH1/ETH2 R4',
+        31 => '#31 — Configuració IP PC real (IT) (IP, màscara, DNS, Gateway)',
+        32 => '#32 — Configuració IP PC real (RRHH) (IP, màscara, DNS, Gateway)',
+        33 => '#33 — Configuració IP PC real (finances) (IP, màscara, DNS, Gateway)',
+        34 => '#34 — Configuració IP PC real (comercial) (IP, màscara, DNS, Gateway)',
+        35 => '#35 — Ping PC real -> Servidor (IT)',
+        36 => '#36 — Ping PC real -> Servidor (RRHH)',
+        37 => '#37 — Ping PC real -> Servidor (finances)',
+        38 => '#38 — Ping PC real -> Servidor (comercial)',
+        39 => '#39 — Impressora RRHH accessible (http://IP_impressora:631)',
+        40 => '#40 — Impressora finances accessible (http://IP_impressora:631)',
+        41 => '#41 — Impressora comercial accessible (http://IP_impressora:631)',
+        42 => '#42 — Ping a internet des d\'un PC real (IT)',
+        43 => '#43 — Ping a internet des d\'un PC real (RRHH)',
+        44 => '#44 — Ping a internet des d\'un PC real (finances)',
+        45 => '#45 — Ping a internet des d\'un PC real (comercial)',
+        46 => '#46 — Mapa de xarxa complet (ha de ser una única captura del mapa complet en GNS3, reflectint si s\'escau els canvis fets des de la 1a entrega',
+        47 => '#47 — Taula d\'incidències detectades i resoltes',
     ];
     return $map[$slot] ?? "Tasca {$slot} — Placeholder";
 }
@@ -70,18 +89,6 @@ if ($group_id <= 0) {
 }
 
 /* =========================
-   Paginació per SLOTS (no per uploads)
-   ========================= */
-$total_pages = (int)ceil(TOTAL_SLOTS / SLOTS_PER_PAGE);
-
-$page = (int)($_GET['page'] ?? 1);
-if ($page < 1) $page = 1;
-if ($page > $total_pages) $page = $total_pages;
-
-$first_slot = (($page - 1) * SLOTS_PER_PAGE) + 1;
-$last_slot  = min(TOTAL_SLOTS, $first_slot + SLOTS_PER_PAGE - 1);
-
-/* =========================
    Info grup
    ========================= */
 $stmt = $mysqli->prepare("SELECT id, name FROM groups WHERE id=? AND role='group' LIMIT 1");
@@ -100,6 +107,284 @@ if (!$g) {
     die('Grup no trobat');
 }
 $group_name = (string)$g['name'];
+
+/* =========================
+   Blocs visibles del grup (per progrés global)
+   ========================= */
+
+$stmt_blocs = $mysqli->prepare(
+  "SELECT
+     b.id,
+     b.nom,
+     b.slot_inici,
+     b.slot_final,
+     b.visible,
+     b.editable
+   FROM blocs b
+   JOIN bloc_calendari bc ON bc.bloc_id = b.id
+   JOIN groups g ON g.class_id = bc.class_id
+   WHERE g.id = ?
+     AND b.visible = 1
+   ORDER BY b.ordre"
+);
+
+if (!$stmt_blocs) {
+  http_response_code(500);
+  die('Error intern (prepare blocs global)');
+}
+
+$stmt_blocs->bind_param('i', $group_id);
+$stmt_blocs->execute();
+$res_blocs = $stmt_blocs->get_result();
+$blocs_globals = $res_blocs ? $res_blocs->fetch_all(MYSQLI_ASSOC) : [];
+$stmt_blocs->close();
+
+/* =========================
+   Bloc actiu per al grup
+   ========================= */
+
+$bloc_id_get = (int)($_GET['bloc_id'] ?? 0);
+$mode_tots = ($bloc_id_get === 0);
+
+$bloc = null;
+foreach ($blocs_globals as $b) {
+  if ($bloc_id_get > 0 && (int)$b['id'] === $bloc_id_get) {
+    $bloc = $b;
+    break;
+  }
+}
+
+if (!$bloc) {
+  $bloc = [
+    "id" => 0,
+    "nom" => "global",
+    "slot_inici" => 1,
+    "slot_final" => REAL_SLOTS,
+    "visible" => 1,
+    "editable" => 1
+  ];
+}
+
+if (!$bloc) {
+  http_response_code(404);
+  die('No hi ha blocs disponibles');
+}
+
+
+/*$
+ * AQUEST CODI COMENTAT SELECCIONA EL PRIMER BLOC DISPONIBLE DEL GRUP
+stmt_bloc = $mysqli->prepare(
+  "SELECT
+     b.id,
+     b.nom,
+     b.slot_inici,
+     b.slot_final,
+     b.visible,
+     b.editable,
+     bc.data_obertura,
+     bc.data_tancament
+   FROM blocs b
+   JOIN bloc_calendari bc ON bc.bloc_id = b.id
+   JOIN groups g ON g.class_id = bc.class_id
+   WHERE g.id = ?
+     AND b.visible = 1
+   ORDER BY b.ordre DESC
+   LIMIT 1"
+);
+
+if (!$stmt_bloc) {
+  http_response_code(500);
+  die('Error intern (prepare bloc actiu)');
+}
+
+$stmt_bloc->bind_param('i', $group_id);
+$stmt_bloc->execute();
+$res_bloc = $stmt_bloc->get_result();
+$bloc = $res_bloc ? $res_bloc->fetch_assoc() : null;
+$stmt_bloc->close();
+
+if (!$bloc) {
+  http_response_code(404);
+  die('No hi ha cap bloc disponible per a aquest grup');
+}
+ */
+
+/* =========================
+   Calendari del bloc seleccionat
+   ========================= */
+
+$stmt_cal = $mysqli->prepare(
+  "SELECT data_obertura, data_tancament
+   FROM bloc_calendari bc
+   JOIN groups g ON g.class_id = bc.class_id
+   WHERE g.id = ?
+     AND bc.bloc_id = ?
+   LIMIT 1"
+);
+
+if (!$stmt_cal) {
+  http_response_code(500);
+  die('Error intern (prepare calendari bloc)');
+}
+
+$stmt_cal->bind_param('ii', $group_id, $bloc['id']);
+$stmt_cal->execute();
+$res_cal = $stmt_cal->get_result();
+$cal = $res_cal ? $res_cal->fetch_assoc() : null;
+$stmt_cal->close();
+
+if (!$cal && $bloc['id'] != 0) {
+  http_response_code(404);
+  die('Calendari del bloc no definit per a aquest grup');
+}
+
+
+/* =========================
+   Estat temporal del bloc
+   ========================= */
+
+if ($bloc['id'] == 0) {
+    $estat_temporal = 'obert';
+}
+else {
+
+    $now = new DateTime();
+    $obertura = new DateTime($cal['data_obertura']);
+    $tancament = new DateTime($cal['data_tancament']);
+
+    if ($now < $obertura) {
+      $estat_temporal = 'no_obert';
+    } elseif ($now > $tancament) {
+      $estat_temporal = 'tancat';
+    } else {
+      $estat_temporal = 'obert';
+    }
+}
+
+$bloc_editable = (
+  $bloc['visible'] == 1 &&
+  $bloc['editable'] == 1 &&
+  $_SESSION['role'] === 'group' &&
+  $estat_temporal === 'obert'
+);
+
+
+/* =========================
+   Progrés del bloc actiu
+   ========================= */
+
+$slot_inici = (int)$bloc['slot_inici'];
+$slot_final = (int)$bloc['slot_final'];
+$total_slots_bloc = $slot_final - $slot_inici + 1;
+
+$stats_bloc = [
+  'validat' => 0,
+  'pendent_validacio' => 0,
+  'rebutjat' => 0,
+];
+
+$stmt_stats_bloc = $mysqli->prepare(
+  "SELECT status, COUNT(*) AS c
+   FROM uploads
+   WHERE group_id = ?
+     AND slot BETWEEN ? AND ?
+   GROUP BY status"
+);
+
+if (!$stmt_stats_bloc) {
+  http_response_code(500);
+  die('Error intern (prepare stats bloc)');
+}
+
+$stmt_stats_bloc->bind_param('iii', $group_id, $slot_inici, $slot_final);
+$stmt_stats_bloc->execute();
+$res = $stmt_stats_bloc->get_result();
+
+if ($res) {
+  while ($r = $res->fetch_assoc()) {
+    $st = (string)$r['status'];
+    if (isset($stats_bloc[$st])) {
+      $stats_bloc[$st] = (int)$r['c'];
+    }
+  }
+}
+$stmt_stats_bloc->close();
+
+$validat = $stats_bloc['validat'];
+$pendent_validacio = $stats_bloc['pendent_validacio'];
+$rebutjat = $stats_bloc['rebutjat'];
+
+$entregats = $validat + $pendent_validacio + $rebutjat;
+$no_entregats = $total_slots_bloc - $entregats;
+
+$p_validat = (int)round(100 * $validat / $total_slots_bloc);
+$p_pendent = (int)round(100 * $pendent_validacio / $total_slots_bloc);
+$p_rebutjat = (int)round(100 * $rebutjat / $total_slots_bloc);
+
+/* absorbeix error d’arrodoniment */
+$p_no = 100 - ($p_validat + $p_pendent + $p_rebutjat);
+
+
+/* =========================
+   Progrés global. S'assumeix bucle + query; més endavant es pot optimitzar
+   ========================= */
+
+$global_total = 0;
+$global_validat = 0;
+$global_pendent = 0;
+$global_rebutjat = 0;
+
+foreach ($blocs_globals as $b) {
+  $si = (int)$b['slot_inici'];
+  $sf = (int)$b['slot_final'];
+  $total_bloc = $sf - $si + 1;
+
+  $global_total += $total_bloc;
+
+  // reutilitzem la mateixa consulta d'estats
+  $stmt_stats = $mysqli->prepare(
+    "SELECT status, COUNT(*) AS c
+     FROM uploads
+     WHERE group_id = ?
+       AND slot BETWEEN ? AND ?
+     GROUP BY status"
+  );
+
+  $stmt_stats->bind_param('iii', $group_id, $si, $sf);
+  $stmt_stats->execute();
+  $res = $stmt_stats->get_result();
+
+  while ($r = $res->fetch_assoc()) {
+    switch ($r['status']) {
+      case 'validat': $global_validat += (int)$r['c']; break;
+      case 'pendent_validacio': $global_pendent += (int)$r['c']; break;
+      case 'rebutjat': $global_rebutjat += (int)$r['c']; break;
+    }
+  }
+  $stmt_stats->close();
+}
+
+$global_entregats = $global_validat + $global_pendent + $global_rebutjat;
+$global_no = $global_total - $global_entregats;
+
+/* =========================
+   Paginació per SLOTS DEL BLOC
+   ========================= */
+//$total_pages = (int)ceil(TOTAL_SLOTS / SLOTS_PER_PAGE);
+$total_pages = (int)ceil($total_slots_bloc / SLOTS_PER_PAGE);
+
+$page = (int)($_GET['page'] ?? 1);
+if ($page < 1) $page = 1;
+if ($page > $total_pages) $page = $total_pages;
+
+//$first_slot = (($page - 1) * SLOTS_PER_PAGE) + 1;
+//$last_slot  = min(TOTAL_SLOTS, $first_slot + SLOTS_PER_PAGE - 1);
+
+$first_slot = $slot_inici + (($page - 1) * SLOTS_PER_PAGE);
+$last_slot  = min($slot_final, $first_slot + SLOTS_PER_PAGE - 1);
+
+//die(strval($total_pages) . "#" . strval($first_slot) . "#" . strval($last_slot));
+
 
 /* =========================
    Carregar uploads dels slots de la pàgina
@@ -126,6 +411,9 @@ if ($res) {
 }
 $stmt->close();
 
+/* =========================
+   Calcul stats global (antic, abans de blocs)
+   ========================= */
 $stmt_stats = $mysqli->prepare(
   "SELECT status, COUNT(*) AS c
    FROM uploads
@@ -168,11 +456,22 @@ $stmt_stats->close();
 
 
 /* =========================
+   Logica de stats per bloc (aquí?)
+   ========================= */
+
+
+
+
+/* =========================
    URLs pager + return
    ========================= */
+$params = $_GET;
 $qExtra = is_profe() ? ('&group_id=' . $group_id) : '';
-$prevUrl = "/album.php?page=" . ($page - 1) . $qExtra;
-$nextUrl = "/album.php?page=" . ($page + 1) . $qExtra;
+
+$params['page'] = $page - 1;
+$prevUrl = '/album.php?' . http_build_query($params);
+$params['page'] = $page + 1;
+$nextUrl = '/album.php?' . http_build_query($params);
 
 $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : "");
 ?>
@@ -189,40 +488,123 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
     <section class="shell" style="grid-template-columns:1fr;">
       <section class="card">
 
-        <div class="album-header">
-          <div class="album-brand">
-            <img src="/assets/img/logoInstitut.png" alt="Institut">
-            <div>
-              <h1 class="album-title">Àlbum de cromos — <?php echo htmlspecialchars($group_name); ?></h1>
-              <p class="album-sub">
-                Sessió: <strong><?php echo htmlspecialchars((string)($_SESSION['username'] ?? '')); ?></strong>
-                (rol: <?php echo htmlspecialchars((string)($_SESSION['role'] ?? '')); ?>)
-                <?php if (is_profe()): ?>
-                  — <a href="/groups.php">Tornar a grups</a>
-                <?php endif; ?>
-              </p>
+	<div class="album-header">
+	  <div class="album-header-top">
+            <div class="album-brand">
+              <img src="/assets/img/logoInstitut.png" alt="Institut">
+              <div>
+                <h1 class="album-title">Àlbum de cromos — <?php echo htmlspecialchars($group_name); ?></h1>
+                <p class="album-sub">
+                  Sessió: <strong><?php echo htmlspecialchars((string)($_SESSION['username'] ?? '')); ?></strong>
+                  (rol: <?php echo htmlspecialchars((string)($_SESSION['role'] ?? '')); ?>)
+                  <?php if (is_profe()): ?>
+                   — <a href="/groups.php">Tornar a grups</a>
+                  <?php endif; ?>
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div class="album-actions">
-            <a class="badge" href="/logout.php">Sortir</a>
-          </div>
-        </div>
-
-	<div class="album-progress">
-
-	  <div class="progress-bar">
-	    <div class="bar-validat" style="width: <?php echo 100*$stats['validat']/$total; ?>%"></div>
-	    <div class="bar-pendent-validacio" style="width: <?php echo 100*$stats['pendent_validacio']/$total; ?>%"></div>
-	    <div class="bar-rebutjat" style="width: <?php echo 100*$stats['rebutjat']/$total; ?>%"></div>
+            <div class="album-actions">
+              <a class="badge" href="/logout.php">Sortir</a>
+	    </div>
 	  </div>
 
-	  <div class="progress-meta">
-	    <span class="ok">✔ <?php echo $stats['validat']; ?> validats</span>
-	    <span class="wait">⏳ <?php echo $stats['pendent_validacio']; ?> entregats</span>
-	    <span class="bad">✖ <?php echo $stats['rebutjat']; ?> rebutjats</span>
-	    <span class="miss">○ <?php echo $stats['pendent']; ?> no entregats</span>
+	  <div class="album-header-bottom">
+	  <div class="album-header-bottom-row">
+            <div class="album-header-bottom-left">
+            <div class="bloc-selector-wrapper">
+              <span class="bloc-selector-label">Bloc d’entregues:</span>
+
+              <div class="bloc-selector">
+                <?php foreach ($blocs_globals as $b): ?>
+                <?php
+                    $active = ((int)$b['id'] === (int)$bloc['id']);
+                    $url = '/album.php?group_id=' . $group_id . '&bloc_id=' . (int)$b['id'];
+                  ?>
+                  <a href="<?php echo htmlspecialchars($url); ?>"
+                     class="badge <?php echo $active ? 'badge-active' : 'badge-muted'; ?>">
+                    <?php echo htmlspecialchars($b['nom']); ?>
+                  </a>
+	        <?php endforeach; ?>
+
+                <?php
+		      $url_tots = '/album.php?group_id=' . $group_id;
+		    ?>
+                  <a href="<?php echo htmlspecialchars($url_tots); ?>"
+                     class="badge <?php echo $mode_tots ? 'badge-active' : 'badge-muted'; ?>">
+                      Àlbum complet
+                  </a>
+
+	      </div>
+
+              <div class="bloc-warning">
+              <?php if (!$bloc_editable): ?>
+                  <?php if ($estat_temporal === 'no_obert'): ?>
+                    Aquest bloc encara no està obert. S’obrirà el
+                    <strong><?php echo $obertura->format('d/m/Y'); ?></strong>.
+                  <?php elseif ($estat_temporal === 'tancat'): ?>
+                    Aquest bloc està tancat des del
+                    <strong><?php echo $tancament->format('d/m/Y'); ?></strong>.
+                    Només es pot consultar.
+                  <?php else: ?>
+                    Aquest bloc no és editable actualment.
+                  <?php endif; ?>
+                <?php elseif ($bloc['id'] === 0): ?>
+                  Estàs visualitzant l'àlbum complet.
+                <?php else: ?>
+                  Aquest bloc accepta entregues fins el
+                  <strong><?php echo $tancament->format('d/m/Y'); ?></strong>.
+              <?php endif; ?>
+              </div>
+	    </div>
+	    </div>
+
+	    <div class="album-header-bottom-right">
+<?php
+$p_g_validat = 40;
+$p_g_pendent = 30;
+$p_g_rebutjat = 20;
+$p_g_no = 10;
+?>
+<?php if (!$mode_tots): ?>
+  <div class="progress-global">
+    <div class="progress-bar">
+      <div class="mini-ok"   style="width: <?php echo $p_g_validat; ?>%"></div>
+      <div class="mini-wait" style="width: <?php echo $p_g_pendent; ?>%"></div>
+      <div class="mini-bad"  style="width: <?php echo $p_g_rebutjat; ?>%"></div>
+      <div class="mini-none" style="width: <?php echo $p_g_no; ?>%"></div>
+    </div>
+
+    <div class="progress-meta">
+      <span class="miss">
+        Progrés global ·
+        <?php echo $global_validat; ?>/<?php echo $global_total; ?> validats
+      </span>
+    </div>
+  </div>
+<?php endif; ?>
+            </div>
+            </div>
+
+	    <div class="album-progress">
+
+	      <div class="progress-bar">
+                <div class="bar-validat"   style="width: <?php echo $p_validat; ?>%"></div>
+                <div class="bar-pendent-validacio" style="width: <?php echo $p_pendent; ?>%"></div>
+                <div class="bar-rebutjat"  style="width: <?php echo $p_rebutjat; ?>%"></div>
+	      </div>
+
+	      <div class="progress-meta">
+	        <span class="ok">✔ <?php echo $stats['validat']; ?> validats</span>
+	        <span class="wait">⏳ <?php echo $stats['pendent_validacio']; ?> entregats</span>
+	        <span class="bad">✖ <?php echo $stats['rebutjat']; ?> rebutjats</span>
+	        <span class="miss">○ <?php echo $stats['pendent']; ?> no entregats</span>
+	      </div>
+
+	    </div>
+
 	  </div>
+
 
 	</div>
 
@@ -321,7 +703,7 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
                 <!-- Nom del cromo / tasca -->
                 <span class="meta"><strong><?php echo htmlspecialchars(slot_title($slot)); ?></strong></span>
 
-                <?php if (is_group()): ?>
+                <?php if (is_group() && $bloc_editable): ?>
                   <?php
                     $uploadUrl = "/upload.php?slot={$slot}&return=" . urlencode($return);
                   ?>
@@ -347,7 +729,7 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
                     <?php endif; ?>
                   </div>
 
-		<?php else: ?>
+		<?php elseif (is_profe()): ?>
 		  <?php if ($u): ?>
 		    <form method="post" action="/upload.php" style="margin-top:8px;">
 		      <input type="hidden" name="action" value="validate">

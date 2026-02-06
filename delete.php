@@ -19,6 +19,11 @@ if ($slot <= 0) {
     http_response_code(400);
     die('Slot incorrecte');
 }
+if (!bloc_editable_per_slot($mysqli, $group_id, $slot)) {
+  http_response_code(403);
+  die('Aquest bloc no admet modificacions en aquest moment.');
+}
+
 
 // Normalitza return (evitar URLs externes)
 if ($return === '' || str_starts_with($return, 'http://') || str_starts_with($return, 'https://')) {

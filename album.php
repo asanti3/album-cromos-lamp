@@ -264,7 +264,7 @@ else {
 $bloc_editable = (
   $bloc['visible'] == 1 &&
   $bloc['editable'] == 1 &&
-  $_SESSION['role'] === 'group' &&
+  //$_SESSION['role'] === 'group' &&
   $estat_temporal === 'obert'
 );
 

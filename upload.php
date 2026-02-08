@@ -20,7 +20,7 @@ if ($is_group && $slot <= 0) {
     http_response_code(400);
     die('Slot incorrecte');
 }
-if (!bloc_editable_per_slot($mysqli, $group_id, $slot)) {
+if (!is_profe() && !bloc_editable_per_slot($mysqli, $group_id, $slot)) {
   http_response_code(403);
   die('Aquest bloc no admet modificacions en aquest moment.');
 }

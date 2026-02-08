@@ -475,6 +475,9 @@ $params['page'] = $page + 1;
 $nextUrl = '/album.php?' . http_build_query($params);
 
 $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : "");
+if (!$mode_tots) {
+  $return .= '&bloc_id=' . $bloc['id'];
+}
 ?>
 <!doctype html>
 <html lang="ca">

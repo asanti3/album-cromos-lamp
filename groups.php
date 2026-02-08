@@ -4,11 +4,6 @@ declare(strict_types=1);
 require_once __DIR__ . '/config.php';
 require_profe(); // IMPORTANT: el teu rol "profe"
 
-// ASB ALERTA TODO DEBUG CÒPIA DE CODI DE album.php
-const SLOTS_PER_PAGE = 4;
-const TOTAL_SLOTS    = 28; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
-const REAL_SLOTS     = 26; // <-- per no comptar els slots "dummy" 
-
 $result = $mysqli->query("SELECT id, name, username, active FROM groups WHERE role='group' ORDER BY id ASC");
 $groups = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 
@@ -107,7 +102,7 @@ function group_stats(int $gid, array $stats_by_group): array {
                 $p_bad  = (int)round(100 * $st['rebutjat'] / REAL_SLOTS);
 
                 $done = $st['validat'] + $st['pendent_validacio'] + $st['rebutjat'];
-                $p_none = (int)round(100 * (TOTAL_SLOTS - $done) / REAL_SLOTS);
+                $p_none = (int)round(100 * (REAL_SLOTS - $done) / REAL_SLOTS);
 
                 /* Ajust fi per sumar 100 */
                 $sum = $p_ok + $p_wait + $p_bad + $p_none;

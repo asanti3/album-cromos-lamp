@@ -1,4 +1,17 @@
 <?php
+
+/* =========================
+*    CONFIG ÀLBUM
+*  ========================= */
+const SLOTS_PER_PAGE = 4;
+const TOTAL_SLOTS    = 48; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
+const REAL_SLOTS     = 47; // <-- per no comptar els slots "dummy" 
+
+
+/* =========================
+*    HELPER FUNCTIONS
+*  ========================= */
+
 function bloc_editable_per_slot(mysqli $mysqli, int $group_id, int $slot): bool
 {
     $stmt = $mysqli->prepare(

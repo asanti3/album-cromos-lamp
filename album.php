@@ -4,16 +4,11 @@ declare(strict_types=1);
 require_once __DIR__ . '/config.php';
 require_login();
 
-/* =========================
-   CONFIG ÀLBUM
-   ========================= */
-const SLOTS_PER_PAGE = 4;
-const TOTAL_SLOTS    = 48; // <-- ajusta-ho al total de cromos del teu projecte (ex: 16, 20, 24...)
-const REAL_SLOTS     = 47; // <-- per no comptar els slots "dummy" 
-
 /**
  * Placeholder del nom del cromo / tasca.
  * Omple aquest mapping amb les tasques.
+ *
+ * ASB: Variables TOTAL_SLOTS i REAL_SLOTS traslladades a helpers.php
  */
 function slot_title(int $slot): string {
     $map = [

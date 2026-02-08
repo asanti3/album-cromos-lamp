@@ -595,10 +595,10 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
 	      </div>
 
 	      <div class="progress-meta">
-	        <span class="ok">✔ <?php echo $stats['validat']; ?> validats</span>
-	        <span class="wait">⏳ <?php echo $stats['pendent_validacio']; ?> entregats</span>
-	        <span class="bad">✖ <?php echo $stats['rebutjat']; ?> rebutjats</span>
-	        <span class="miss">○ <?php echo $stats['pendent']; ?> no entregats</span>
+	        <span class="ok">✔ <?php echo $validat; ?> validats</span>
+	        <span class="wait">⏳ <?php echo $pendent_validacio; ?> entregats</span>
+	        <span class="bad">✖ <?php echo $rebutjat; ?> rebutjats</span>
+	        <span class="miss">○ <?php echo $no_entregats; ?> no entregats</span>
 	      </div>
 
 	    </div>

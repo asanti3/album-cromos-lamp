@@ -405,7 +405,15 @@ label{
   position: relative;
 }
 
+.sticker-image-link {
+  cursor: zoom-in;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 /* Vista prèvia a mida completa */
+/*.sticker-image-link img{*/
 .sticker-frame img{
   width: 100%;
   height: 100%;

@@ -663,6 +663,7 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
                       $fn = (string)$u['filename'];
                       $is_img = (bool)preg_match('/\.(png|jpg|jpeg|webp)$/i', $fn);
                     ?>
+                    <a href="/uploads.php?id=<?php echo (int)$u['id']; ?>" class="sticker-image-link">
                     <?php if ($is_img): ?>
                       <img src="/uploads.php?id=<?php echo (int)$u['id']; ?>" alt="Cromo <?php echo (int)$slot; ?>">
                     <?php else: ?>
@@ -670,7 +671,8 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
                         PDF PUJAT
                         <small>Prem “Veure” per obrir-lo</small>
                       </div>
-                    <?php endif; ?>
+		    <?php endif; ?>
+                    </a>
                   <?php else: ?>
                     <div class="sticker-empty">
                       CROMO NO ACONSEGUIT
@@ -690,11 +692,6 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
                   <div>
                     <div><strong>Fitxer:</strong> <?php echo htmlspecialchars($u ? (string)$u['original_name'] : '—'); ?></div>
                     <div><strong>Data:</strong> <?php echo htmlspecialchars($u ? (string)$u['created_at'] : '—'); ?></div>
-                  </div>
-                  <div>
-                    <?php if ($u): ?>
-                      <a class="btn-secondary" href="/uploads.php?id=<?php echo (int)$u['id']; ?>">Veure</a>
-                    <?php endif; ?>
                   </div>
                 </div>
               </div>

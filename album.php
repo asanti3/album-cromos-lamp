@@ -367,6 +367,12 @@ foreach ($blocs_globals as $b) {
 $global_entregats = $global_validat + $global_pendent + $global_rebutjat;
 $global_no = $global_total - $global_entregats;
 
+$p_g_validat = 100*$global_validat/$global_total;
+$p_g_pendent = 100*$global_pendent/$global_total;
+$p_g_rebutjat = 100*$global_rebutjat/$global_total;
+$p_g_no = 100*$global_no/$global_total;
+
+
 /* =========================
    Paginació per SLOTS DEL BLOC
    ========================= */
@@ -560,12 +566,6 @@ $return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : ""
 	    </div>
 
 	    <div class="album-header-bottom-right">
-<?php
-$p_g_validat = 40;
-$p_g_pendent = 30;
-$p_g_rebutjat = 20;
-$p_g_no = 10;
-?>
 <?php if (!$mode_tots): ?>
   <div class="progress-global">
     <div class="progress-bar">

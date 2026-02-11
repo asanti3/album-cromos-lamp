@@ -11,7 +11,7 @@ USE album_captures;
 
 -- 2) Usuari aplicació (NO root)
 -- Nota: canvia la contrasenya abans d'executar en entorn real.
-CREATE USER IF NOT EXISTS 'album_user'@'localhost' IDENTIFIED BY 'USER_PW';
+CREATE USER IF NOT EXISTS 'album_user'@'localhost' IDENTIFIED BY 'PIX2025';
 
 -- Permisos mínims: només aquesta BD
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, INDEX, ALTER
@@ -31,7 +31,7 @@ CREATE TABLE groups (
   password_hash VARCHAR(255) NOT NULL,
   role          ENUM('profe', 'group') NOT NULL,
   active        TINYINT(1) NOT NULL DEFAULT 1,
-  class_id      INT NOT NULL,
+  class_id      INT NOT NULL DEFAULT 0,
   created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_groups_username (username)
 ) ENGINE=InnoDB;

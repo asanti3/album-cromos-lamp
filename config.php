@@ -20,7 +20,7 @@ session_start();
 $db_host = 'localhost';
 $db_name = 'album_captures';
 $db_user = 'album_user';
-$db_pass = 'USER_PW';
+$db_pass = 'PIX2025';
 
 $mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
@@ -34,6 +34,7 @@ $mysqli->set_charset('utf8mb4');
 /* =========================
    Helpers d'autenticació
    ========================= */
+require_once __DIR__ . '/helpers.php';
 
 /**
  * Hi ha sessió iniciada?

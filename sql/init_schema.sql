@@ -31,7 +31,7 @@ CREATE TABLE groups (
   password_hash VARCHAR(255) NOT NULL,
   role          ENUM('profe', 'group') NOT NULL,
   active        TINYINT(1) NOT NULL DEFAULT 1,
-  class_id      INT NOT NULL
+  class_id      INT NOT NULL,
   created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   UNIQUE KEY uq_groups_username (username)
 ) ENGINE=InnoDB;

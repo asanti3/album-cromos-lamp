@@ -14,6 +14,14 @@ declare(strict_types=1);
    ========================= */
 session_start();
 
+/* Optional constants for runtime customization:
+   - BASE_URL:   base URL prefix for redirects and links
+   - BASE_PATH:  application path on the host
+   - UPLOADS_DIR: path to the uploads folder
+   - SESSION_NAME: custom PHP session name
+   These are defined by bootstrap.php by default.
+*/
+
 /* =========================
    Configuració BD
    ========================= */

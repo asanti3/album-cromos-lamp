@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/bootstrap.php';
 require_group(); // només grup pot eliminar els seus cromos
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

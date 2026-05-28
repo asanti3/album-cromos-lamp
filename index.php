@@ -10,7 +10,7 @@ declare(strict_types=1);
  * - Redirigeix segons rol
  */
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /* =========================
    Si ja hi ha sessió activa

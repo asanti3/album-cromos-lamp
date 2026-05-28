@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/bootstrap.php';
 require_profe(); // IMPORTANT: el teu rol "profe"
 
 $result = $mysqli->query("SELECT id, name, username, active FROM groups WHERE role='group' ORDER BY id ASC");

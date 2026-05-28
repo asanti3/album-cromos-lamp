@@ -4,3 +4,4 @@ config.php
 *.swo
 .env
 .DS_Store
+sql/local/

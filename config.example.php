@@ -18,8 +18,8 @@ session_start();
    Configuració BD
    ========================= */
 $db_host = 'localhost';
-$db_name = 'album_captures';
-$db_user = 'album_user';
+$db_name = 'NOM_BD';
+$db_user = 'DB_USER';
 $db_pass = 'USER_PW';
 
 $mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);

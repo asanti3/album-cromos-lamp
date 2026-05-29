@@ -33,7 +33,7 @@ if (is_group() && $file_group_id !== (int)$_SESSION['user_id']) {
     die('Accés denegat');
 }
 
-$path = __DIR__ . '/uploads/' . (string)$u['filename'];
+$path = UPLOADS_DIR . '/' . (string)$u['filename'];
 if (!is_file($path)) {
     http_response_code(404);
     die('Fitxer no disponible al disc');

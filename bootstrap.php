@@ -13,5 +13,8 @@ if (!defined('UPLOADS_DIR')) {
 if (!defined('SESSION_NAME')) {
     define('SESSION_NAME', 'album_cromos');
 }
+if (!defined('UPLOADS_URL')) {
+    define('UPLOADS_URL', BASE_URL . '/uploads');
+}
 
 require_once __DIR__ . '/config.php';

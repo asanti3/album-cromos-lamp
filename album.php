@@ -99,12 +99,12 @@ if (is_group()) {
 } else {
     $group_id = (int)($_GET['group_id'] ?? 0);
     if ($group_id <= 0) {
-        header('Location: /groups.php');
+      header('Location: ' . BASE_URL . '/groups.php');
         exit;
     }
 }
 if ($group_id <= 0) {
-    header('Location: /login.html');
+    header('Location: ' . BASE_URL . '/login.html');
     exit;
 }
 
@@ -495,11 +495,11 @@ $params = $_GET;
 $qExtra = is_profe() ? ('&group_id=' . $group_id) : '';
 
 $params['page'] = $page - 1;
-$prevUrl = '/album.php?' . http_build_query($params);
+$prevUrl = BASE_URL . '/album.php?' . http_build_query($params);
 $params['page'] = $page + 1;
-$nextUrl = '/album.php?' . http_build_query($params);
+$nextUrl = BASE_URL . '/album.php?' . http_build_query($params);
 
-$return = "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : "");
+$return = BASE_URL . "/album.php?page={$page}" . (is_profe() ? "&group_id={$group_id}" : "");
 if (!$mode_tots) {
   $return .= '&bloc_id=' . $bloc['id'];
 }
@@ -520,21 +520,21 @@ if (!$mode_tots) {
 	<div class="album-header">
 	  <div class="album-header-top">
             <div class="album-brand">
-              <img src="/assets/img/logoInstitut.png" alt="Institut">
+              <img src="<?php echo BASE_URL; ?>/assets/img/logoInstitut.png" alt="Institut">
               <div>
                 <h1 class="album-title">Àlbum de cromos — <?php echo htmlspecialchars($group_name); ?></h1>
                 <p class="album-sub">
                   Sessió: <strong><?php echo htmlspecialchars((string)($_SESSION['username'] ?? '')); ?></strong>
                   (rol: <?php echo htmlspecialchars((string)($_SESSION['role'] ?? '')); ?>)
                   <?php if (is_profe()): ?>
-                   — <a href="/groups.php">Tornar a grups</a>
+                   — <a href="<?php echo BASE_URL; ?>/groups.php">Tornar a grups</a>
                   <?php endif; ?>
                 </p>
               </div>
             </div>
 
             <div class="album-actions">
-              <a class="badge" href="/logout.php">Sortir</a>
+              <a class="badge" href="<?php echo BASE_URL; ?>/logout.php">Sortir</a>
 	    </div>
 	  </div>
 
@@ -548,7 +548,7 @@ if (!$mode_tots) {
                 <?php foreach ($blocs_globals as $b): ?>
                 <?php
                     $active = ((int)$b['id'] === (int)$bloc['id']);
-                    $url = '/album.php?group_id=' . $group_id . '&bloc_id=' . (int)$b['id'];
+                    $url = BASE_URL . '/album.php?group_id=' . $group_id . '&bloc_id=' . (int)$b['id'];
                   ?>
                   <a href="<?php echo htmlspecialchars($url); ?>"
                      class="badge <?php echo $active ? 'badge-active' : 'badge-muted'; ?>">
@@ -556,9 +556,9 @@ if (!$mode_tots) {
                   </a>
 	        <?php endforeach; ?>
 
-                <?php
-		      $url_tots = '/album.php?group_id=' . $group_id;
-		    ?>
+                 <?php
+          	      $url_tots = BASE_URL . '/album.php?group_id=' . $group_id;
+         	    ?>
                   <a href="<?php echo htmlspecialchars($url_tots); ?>"
                      class="badge <?php echo $mode_tots ? 'badge-active' : 'badge-muted'; ?>">
                       Àlbum complet
@@ -686,9 +686,9 @@ if (!$mode_tots) {
                       $fn = (string)$u['filename'];
                       $is_img = (bool)preg_match('/\.(png|jpg|jpeg|webp)$/i', $fn);
                     ?>
-                    <a href="/uploads.php?id=<?php echo (int)$u['id']; ?>" class="sticker-image-link">
+                    <a href="<?php echo BASE_URL . '/uploads.php?id=' . (int)$u['id']; ?>" class="sticker-image-link">
                     <?php if ($is_img): ?>
-                      <img src="/uploads.php?id=<?php echo (int)$u['id']; ?>" alt="Cromo <?php echo (int)$slot; ?>">
+                      <img src="<?php echo BASE_URL . '/uploads.php?id=' . (int)$u['id']; ?>" alt="Cromo <?php echo (int)$slot; ?>">
                     <?php else: ?>
                       <div class="sticker-empty">
                         PDF PUJAT
@@ -725,7 +725,7 @@ if (!$mode_tots) {
 
                 <?php if (is_group() && $bloc_editable): ?>
                   <?php
-                    $uploadUrl = "/upload.php?slot={$slot}&return=" . urlencode($return);
+                    $uploadUrl = BASE_URL . "/upload.php?slot={$slot}&return=" . urlencode($return);
                   ?>
 
                   <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
@@ -736,7 +736,7 @@ if (!$mode_tots) {
 
                     <!-- Eliminar (només si el cromo està omplert) -->
                     <?php if ($u): ?>
-                      <form method="post" action="/delete.php" style="margin:0;">
+                      <form method="post" action="<?php echo BASE_URL; ?>/delete.php" style="margin:0;">
                         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
                         <input type="hidden" name="slot" value="<?php echo (int)$slot; ?>">
                         <input type="hidden" name="return" value="<?php echo htmlspecialchars($return); ?>">
@@ -751,7 +751,7 @@ if (!$mode_tots) {
 
 		<?php elseif (is_profe()): ?>
 		  <?php if ($u): ?>
-		    <form method="post" action="/upload.php" style="margin-top:8px;">
+            <form method="post" action="<?php echo BASE_URL; ?>/upload.php" style="margin-top:8px;">
 		      <input type="hidden" name="action" value="validate">
 		      <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars(csrf_token()); ?>">
 		      <input type="hidden" name="upload_id" value="<?php echo (int)$u['id']; ?>">

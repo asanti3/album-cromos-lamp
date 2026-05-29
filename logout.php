@@ -5,5 +5,5 @@ require_once __DIR__ . '/bootstrap.php';
 $_SESSION = [];
 session_destroy();
 
-header('Location: /login.html');
+header('Location: ' . BASE_URL . '/login.html');
 exit;

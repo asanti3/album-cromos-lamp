@@ -40,7 +40,7 @@ function group_stats(int $gid, array $stats_by_group): array {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Professorat — Grups</title>
-  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="<?php echo BASE_URL; ?>/assets/css/styles.css">
 </head>
 <body>
   <main class="page">
@@ -48,7 +48,7 @@ function group_stats(int $gid, array $stats_by_group): array {
       <section class="card">
         <div class="row">
           <h2>Grups (lectura)</h2>
-          <a class="badge" href="/logout.php">Sortir</a>
+          <a class="badge" href="<?php echo BASE_URL; ?>/logout.php">Sortir</a>
         </div>
 
         <p class="meta">
@@ -90,7 +90,7 @@ function group_stats(int $gid, array $stats_by_group): array {
                   <?php echo ((int)$g['active'] === 1) ? 'Actiu' : 'Inactiu'; ?>
                 </td>
                 <td style="padding:10px; border-bottom:1px solid var(--border);">
-                  <a href="/album.php?group_id=<?php echo (int)$g['id']; ?>">Veure</a>
+                  <a href="<?php echo BASE_URL; ?>/album.php?group_id=<?php echo (int)$g['id']; ?>">Veure</a>
 		</td>
 
                 <?php $st = group_stats($gid, $stats_by_group); ?>
@@ -128,8 +128,8 @@ function group_stats(int $gid, array $stats_by_group): array {
 
                 <td style="text-align:center; padding:10px; border-bottom:1px solid var(--border);">
                 <?php if ($st['pendent_validacio'] > 0 && $first_slot !== null): ?>
-                  <a class="badge badge-corregir"
-                      href="/album.php?group_id=<?php echo $gid; ?>&page=<?php echo (int)ceil($first_slot / SLOTS_PER_PAGE); ?>">
+                    <a class="badge badge-corregir"
+                      href="<?php echo BASE_URL; ?>/album.php?group_id=<?php echo $gid; ?>&page=<?php echo (int)ceil($first_slot / SLOTS_PER_PAGE); ?>">
                       Corregir
                   </a>
                 <?php else: ?>

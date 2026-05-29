@@ -15,11 +15,12 @@ declare(strict_types=1);
 session_start();
 
 /* Optional constants for runtime customization:
-   - BASE_URL:   base URL prefix for redirects and links
-   - BASE_PATH:  application path on the host
-   - UPLOADS_DIR: path to the uploads folder
-   - SESSION_NAME: custom PHP session name
-   These are defined by bootstrap.php by default.
+    - BASE_URL:   base URL prefix for redirects and links
+    - BASE_PATH:  application path on the host
+    - UPLOADS_DIR: path to the uploads folder
+    - UPLOADS_URL: public URL prefix for uploaded files
+    - SESSION_NAME: custom PHP session name
+    These are defined by bootstrap.php by default.
 */
 
 /* =========================
@@ -72,7 +73,7 @@ function is_group(): bool {
  */
 function require_login(): void {
     if (!is_logged_in()) {
-        header('Location: /login.html');
+        header('Location: ' . BASE_URL . '/login.html');
         exit;
     }
 }
